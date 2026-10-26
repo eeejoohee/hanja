@@ -111,6 +111,44 @@ button:focus-visible{outline:3px solid var(--star);outline-offset:2px}
 @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
 .pop{animation:pop .35s}
 @media (prefers-reduced-motion: reduce){.card{transition:none}.pop{animation:none}.bar i{transition:none}}
+
+/* one-screen layout */
+html,body{height:100%}
+.wrap{height:100%;display:flex;flex-direction:column;padding:12px 16px 10px}
+#cardView,#quizView,#quizPlay{flex:1;min-height:0;display:flex;flex-direction:column}
+.stage{flex:0 1 min(calc(100vw - 32px),448px);min-height:170px;margin-top:2px;container-type:size;display:flex;align-items:center;justify-content:center}
+#cardView{justify-content:flex-start}
+.card{width:100%;height:100%;aspect-ratio:auto}
+@supports (width:1cqmin){.card{width:100cqmin;height:100cqmin}}
+.face{padding:12px;border:1.5px solid var(--line)}
+.qcard{border:1.5px solid var(--line)}
+.tian{border-width:2px}
+.tian{width:auto;height:70%;max-width:85%}
+.big{font-size:min(38vw,19vh);font-size:min(38vw,19dvh)}
+.hint{margin-top:8px;font-size:.9rem}
+.back .smallhan{font-size:3rem}
+.back .hun{font-size:1.9rem;margin:6px 0 10px}
+.back .tip{font-size:1.05rem;padding:10px 12px}
+.nav{margin-top:10px}
+.nav button{flex-basis:56px;height:48px}
+.nav .mid{flex-direction:row;gap:10px}
+.words{margin-top:10px;padding:8px 10px;display:flex;align-items:center;gap:8px}
+.words h2{margin:0;flex:none;font-size:.95rem}
+.words ul{flex-wrap:nowrap;overflow:hidden;gap:6px}
+.words li{flex:none;padding:5px 9px;font-size:1rem}
+.qtop{margin:2px 2px 6px}
+.bar{margin-bottom:8px}
+.qcard{flex:1;min-height:150px;max-height:min(calc(100vw - 32px),448px);padding:10px;justify-content:center}
+#quizPlay{justify-content:flex-start}
+.qcard .tian{width:auto;height:72%;max-width:70%}
+.qcard .big{font-size:min(28vw,12vh);font-size:min(28vw,12dvh)}
+.qask{margin:8px 0 0;font-size:1.05rem}
+.choices{margin-top:12px;gap:10px}
+.choices button{padding:10px;font-size:1.2rem}
+.feedback{min-height:2.9em;margin-top:8px;font-size:1rem;line-height:1.4}
+.primary{padding:12px;margin-top:4px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:calc(100% - 32px);background:var(--ink);color:var(--surface);padding:12px 16px;border-radius:12px;font-size:1rem;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -144,11 +182,11 @@ button:focus-visible{outline:3px solid var(--star);outline-offset:2px}
     </div>
     <div class="nav">
       <button id="prev" aria-label="이전 한자">‹</button>
-      <div class="mid"><span class="count" id="count"></span><button class="say" id="say">🔊 소리 듣기</button></div>
+      <span class="count" id="count"></span>
       <button id="next" aria-label="다음 한자">›</button>
     </div>
     <div class="words" id="words">
-      <h2>이 한자로 만든 낱말 (누르면 읽어줘요)</h2>
+      <h2>낱말</h2>
       <ul id="wordList"></ul>
     </div>
   </section>
@@ -175,6 +213,7 @@ button:focus-visible{outline:3px solid var(--star);outline-offset:2px}
     </div>
   </section>
 </div>
+<div class="toast" id="toast" role="status"></div>
 
 <script>
 const THEMES = [
@@ -250,12 +289,13 @@ let koVoice = null;
 function pickVoice(){try{const v=speechSynthesis.getVoices();koVoice=v.find(x=>/^ko/i.test(x.lang))||null}catch(e){}}
 if(canSpeak){pickVoice(); speechSynthesis.onvoiceschanged=pickVoice}
 function speak(t,force){
-  if(!canSpeak||(!soundOn&&!force))return;
+  if(!canSpeak){if(force)toast("이 브라우저는 소리 기능이 없어요. 크롬이나 사파리로 열어 주세요.");return}
+  if(!soundOn&&!force)return;
   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="ko-KR";if(koVoice)u.voice=koVoice;u.rate=.85;speechSynthesis.speak(u)}catch(e){}
 }
 function renderSnd(){$("snd").textContent=soundOn?"🔊":"🔇";$("snd").setAttribute("aria-label",soundOn?"자동 소리 끄기":"자동 소리 켜기")}
-$("snd").onclick=()=>{soundOn=!soundOn;store.set("h8sound",soundOn);renderSnd();if(soundOn)speak("소리를 켰어요")};
-if(!canSpeak){$("snd").classList.add("hide");$("say").classList.add("hide")}
+$("snd").onclick=()=>{soundOn=!soundOn;store.set("h8sound",soundOn);renderSnd();if(soundOn)speak("소리를 켰어요",true)};
+function toast(t){let el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove("show"),3200)}
 renderSnd();
 
 function itemsOf(t){return t===ALL_IDX?ALL:THEMES[t].items}
@@ -280,12 +320,11 @@ function renderCard(){
   $("count").textContent=`${idx+1} / ${list.length}`;
   $("prev").disabled=idx===0; $("next").disabled=idx===list.length-1;
   const wl=$("wordList"); wl.innerHTML="";
-  const words = WORDS.filter(([h])=>h.includes(it[0])).slice(0,4);
+  const words = WORDS.filter(([h])=>h.includes(it[0])).slice(0,3);
   $("words").classList.toggle("hide",!words.length);
   words.forEach(([h,r])=>{const li=document.createElement("li");li.innerHTML=`<span>${h.split(it[0]).join(`<em>${it[0]}</em>`)}</span>${r}`;li.onclick=()=>speak(r,true);wl.appendChild(li)});
 }
 $("card").onclick=()=>{if($("card").classList.toggle("flip")) speak(itemsOf(theme)[idx][1])};
-$("say").onclick=()=>speak(itemsOf(theme)[idx][1],true);
 $("prev").onclick=()=>{if(idx>0){idx--;renderCard()}};
 $("next").onclick=()=>{if(idx<itemsOf(theme).length-1){idx++;renderCard()}};
 
