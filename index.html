@@ -15,6 +15,24 @@
   }catch(e){}
 })();
 </script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+// ▼▼ OneSignal에서 받은 App ID를 따옴표 안에 넣으세요 ▼▼
+const ONESIGNAL_APP_ID = "2bf2107a-74c9-4527-b3eb-5bbb706eb607";
+// ▲▲ 여기까지만 바꾸면 돼요 ▲▲
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+if(!ONESIGNAL_APP_ID.startsWith("YOUR")){
+  OneSignalDeferred.push(async function(OneSignal){
+    await OneSignal.init({
+      appId: ONESIGNAL_APP_ID,
+      serviceWorkerPath: "hanja8/push/OneSignalSDKWorker.js",
+      serviceWorkerParam: { scope: "/hanja8/push/" }
+    });
+    window.__os = OneSignal;
+    document.dispatchEvent(new Event("os-ready"));
+  });
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
@@ -166,7 +184,7 @@ html,body{height:100%}
 <div class="wrap">
   <header>
     <h1><span class="seal">漢</span>한자 8급 놀이터</h1>
-    <div class="hdr-right"><button class="snd" id="snd" aria-label="자동 소리 끄기">🔊</button><div class="stars" aria-label="모은 별">⭐ <b id="totalStars">0</b></div></div>
+    <div class="hdr-right"><button class="snd" id="bell" aria-label="퀴즈 알림 받기">🔕</button><button class="snd" id="snd" aria-label="자동 소리 끄기">🔊</button><div class="stars" aria-label="모은 별">⭐ <b id="totalStars">0</b></div></div>
   </header>
 
   <div class="mode" role="group" aria-label="공부 방법">
@@ -342,8 +360,9 @@ $("next").onclick=()=>{if(idx<itemsOf(theme).length-1){idx++;renderCard()}};
 /* quiz */
 let qList=[], qi=0, score=0;
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-function startQuiz(){
-  qList = shuffle(itemsOf(theme)).slice(0, theme===ALL_IDX?10:itemsOf(theme).length);
+function startQuiz(first){
+  qList = first ? [first, ...shuffle(ALL.filter(x=>x[0]!==first[0])).slice(0,4)]
+                : shuffle(itemsOf(theme)).slice(0, theme===ALL_IDX?10:itemsOf(theme).length);
   qi=0; score=0;
   $("quizPlay").classList.remove("hide"); $("quizEnd").classList.add("hide");
   showQ();
@@ -394,7 +413,7 @@ function endQuiz(){
   if(score>prevBest){best[key]=score; store.set("h8best",best)}
   $("bestText").textContent=`이 테마 최고 기록: ${Math.max(score,prevBest)}개`;
 }
-$("retry").onclick=startQuiz;
+$("retry").onclick=()=>startQuiz();
 $("toCards").onclick=()=>setMode("card");
 
 function setMode(m){
@@ -408,7 +427,50 @@ function setMode(m){
 $("mCard").onclick=()=>setMode("card");
 $("mQuiz").onclick=()=>setMode("quiz");
 
+// 퀴즈 알림 받기 (OneSignal)
+const bell=$("bell");
+if(ONESIGNAL_APP_ID.startsWith("YOUR")) bell.classList.add("hide");
+function renderBell(){
+  const on = !!(window.__os && window.__os.Notifications.permission);
+  bell.textContent = on ? "🔔" : "🔕";
+  bell.setAttribute("aria-label", on ? "퀴즈 알림 켜짐" : "퀴즈 알림 받기");
+}
+document.addEventListener("os-ready",()=>{
+  renderBell();
+  try{ window.__os.Notifications.addEventListener("permissionChange", renderBell) }catch(e){}
+});
+bell.onclick=async()=>{
+  const os=window.__os;
+  if(!os){ toast("알림 준비 중이에요. 잠시 후 다시 눌러 주세요."); return }
+  if(os.Notifications.permission){ toast("매일 한자 퀴즈 알림을 받고 있어요 🔔"); return }
+  try{ await os.Notifications.requestPermission() }catch(e){}
+  renderBell();
+  toast(os.Notifications.permission ? "알림을 켰어요! 매일 퀴즈가 찾아와요." : "알림이 꺼져 있어요. 크롬 설정에서 이 사이트 알림을 허용해 주세요.");
+};
+
+// 처음 화면을 한 번 누르면 알림 허용 창을 자동으로 띄우기
+function autoAskPush(){
+  const os=window.__os;
+  if(!os || os.Notifications.permission) return;
+  if(!("Notification" in window) || Notification.permission!=="default") return;
+  os.Notifications.requestPermission().then(renderBell).catch(()=>{});
+}
+document.addEventListener("pointerup", function once(){
+  if(window.__os){ autoAskPush(); document.removeEventListener("pointerup", once); }
+});
+
 renderThemes(); renderCard();
+
+// 알림에서 열었을 때(?q=火) 그 한자 문제부터 바로 풀기
+const qParam = new URLSearchParams(location.search).get("q");
+const qItem = qParam && ALL.find(x=>x[0]===qParam);
+if(qItem){
+  theme=ALL_IDX; renderThemes(); mode="quiz";
+  $("mCard").setAttribute("aria-pressed",false); $("mQuiz").setAttribute("aria-pressed",true);
+  $("cardView").classList.add("hide"); $("quizView").classList.remove("hide");
+  startQuiz(qItem);
+  try{history.replaceState(null,"",location.pathname)}catch(e){}
+}
 </script>
 </body>
 </html>
