@@ -23,7 +23,7 @@ jobs:
           const body = {
             app_id: process.env.APP_ID,
             target_channel: "push",
-            included_segments: ["Subscribed Users"],
+            included_segments: ["Total Subscriptions"],
             headings: { en: "오늘의 한자 퀴즈 ✏️", ko: "오늘의 한자 퀴즈 ✏️" },
             contents: { en: han + " 은(는) 무슨 뜻일까요? 눌러서 맞혀 보세요!", ko: han + " 은(는) 무슨 뜻일까요? 눌러서 맞혀 보세요!" },
             url: process.env.SITE + "?q=" + encodeURIComponent(han)
@@ -35,6 +35,6 @@ jobs:
           }).then(async r => {
             const t = await r.text();
             console.log(r.status, t);
-            if (!r.ok) process.exit(1);
+            if (!r.ok || /"errors"/.test(t)) process.exit(1);
           });
           JS
