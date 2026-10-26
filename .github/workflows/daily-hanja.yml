@@ -1,0 +1,40 @@
+name: 오늘의 한자 퀴즈 알림
+
+on:
+  schedule:
+    # 매일 한국시간 오후 5시 (UTC 08:00). 시간을 바꾸려면 앞의 숫자 8을 바꾸세요. (한국시간 - 9)
+    - cron: "0 8 * * *"
+  workflow_dispatch: {}   # Actions 탭에서 "Run workflow"로 바로 테스트 가능
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 랜덤 한자 퀴즈 알림 보내기
+        env:
+          APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
+          REST_KEY: ${{ secrets.ONESIGNAL_REST_KEY }}
+          SITE: https://eeejoohee.github.io/hanja8/
+          HANJA: "一:한 일,二:두 이,三:석 삼,四:넉 사,五:다섯 오,六:여섯 륙,七:일곱 칠,八:여덟 팔,九:아홉 구,十:열 십,千:일천 천,萬:일만 만,月:달 월,火:불 화,水:물 수,木:나무 목,金:쇠 금,土:흙 토,日:날 일,父:아비 부,母:어미 모,兄:형 형,弟:아우 제,女:계집 녀,人:사람 인,寸:마디 촌,東:동녘 동,西:서녘 서,南:남녘 남,北:북녘 북,中:가운데 중,外:바깥 외,學:배울 학,校:학교 교,敎:가르칠 교,先:먼저 선,生:날 생,室:집 실,門:문 문,長:긴 장,大:큰 대,小:작을 소,韓:한국 한,民:백성 민,國:나라 국,王:임금 왕,軍:군사 군,山:메 산,白:흰 백,靑:푸를 청,年:해 년"
+        run: |
+          node <<'JS'
+          const list = process.env.HANJA.split(",").map(x => x.split(":"));
+          const [han] = list[Math.floor(Math.random() * list.length)];
+          const body = {
+            app_id: process.env.APP_ID,
+            target_channel: "push",
+            included_segments: ["Subscribed Users"],
+            headings: { en: "오늘의 한자 퀴즈 ✏️", ko: "오늘의 한자 퀴즈 ✏️" },
+            contents: { en: han + " 은(는) 무슨 뜻일까요? 눌러서 맞혀 보세요!", ko: han + " 은(는) 무슨 뜻일까요? 눌러서 맞혀 보세요!" },
+            url: process.env.SITE + "?q=" + encodeURIComponent(han)
+          };
+          fetch("https://api.onesignal.com/notifications", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": "Key " + process.env.REST_KEY },
+            body: JSON.stringify(body)
+          }).then(async r => {
+            const t = await r.text();
+            console.log(r.status, t);
+            if (!r.ok) process.exit(1);
+          });
+          JS
