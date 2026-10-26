@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>한자 8급 놀이터</title>
+<script>
+// 카카오톡 안에서 열면 크롬/사파리 같은 기본 브라우저로 다시 열기
+(function(){
+  try{
+    if(window.top!==window) return;
+    if(/KAKAOTALK/i.test(navigator.userAgent)){
+      location.href="kakaotalk://web/openExternal?url="+encodeURIComponent(location.href);
+    }
+  }catch(e){}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
