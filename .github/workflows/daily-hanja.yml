@@ -1,40 +1,80 @@
-name: 오늘의 한자 퀴즈 알림
+name: 한자 퀴즈 알림
 
 on:
   schedule:
-    # 매일 한국시간 오후 5시 (UTC 08:00). 시간을 바꾸려면 앞의 숫자 8을 바꾸세요. (한국시간 - 9)
-    - cron: "0 8 * * *"
-  workflow_dispatch: {}   # Actions 탭에서 "Run workflow"로 바로 테스트 가능
+    # 30분마다(매시 3분, 33분) 실행해서, 그 시각(한국시간)을 고른 사람에게만 알림을 보내요.
+    - cron: "3,33 * * * *"
+  workflow_dispatch:
+    inputs:
+      to_all:
+        description: "지금 모든 구독자에게 테스트 알림 보내기"
+        type: boolean
+        default: true
 
 jobs:
   send:
     runs-on: ubuntu-latest
     steps:
-      - name: 랜덤 한자 퀴즈 알림 보내기
+      - uses: actions/checkout@v4
+
+      - name: 알림 보내기
         env:
           APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
           REST_KEY: ${{ secrets.ONESIGNAL_REST_KEY }}
-          SITE: https://eeejoohee.github.io/hanja8/
-          HANJA: "一:한 일,二:두 이,三:석 삼,四:넉 사,五:다섯 오,六:여섯 륙,七:일곱 칠,八:여덟 팔,九:아홉 구,十:열 십,千:일천 천,萬:일만 만,月:달 월,火:불 화,水:물 수,木:나무 목,金:쇠 금,土:흙 토,日:날 일,父:아비 부,母:어미 모,兄:형 형,弟:아우 제,女:계집 녀,人:사람 인,寸:마디 촌,東:동녘 동,西:서녘 서,南:남녘 남,北:북녘 북,中:가운데 중,外:바깥 외,學:배울 학,校:학교 교,敎:가르칠 교,先:먼저 선,生:날 생,室:집 실,門:문 문,長:긴 장,大:큰 대,小:작을 소,韓:한국 한,民:백성 민,國:나라 국,王:임금 왕,軍:군사 군,山:메 산,白:흰 백,靑:푸를 청,年:해 년"
+          SITE: https://eeejoohee.github.io/hanja/
+          TO_ALL: ${{ github.event_name == 'workflow_dispatch' && inputs.to_all }}
         run: |
           node <<'JS'
-          const list = process.env.HANJA.split(",").map(x => x.split(":"));
-          const [han] = list[Math.floor(Math.random() * list.length)];
-          const body = {
-            app_id: process.env.APP_ID,
-            target_channel: "push",
-            included_segments: ["Total Subscriptions"],
-            headings: { en: "오늘의 한자 퀴즈 ✏️", ko: "오늘의 한자 퀴즈 ✏️" },
-            contents: { en: han + " 은(는) 무슨 뜻일까요? 눌러서 맞혀 보세요!", ko: han + " 은(는) 무슨 뜻일까요? 눌러서 맞혀 보세요!" },
-            url: process.env.SITE + "?q=" + encodeURIComponent(han)
-          };
-          fetch("https://api.onesignal.com/notifications", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": "Key " + process.env.REST_KEY },
-            body: JSON.stringify(body)
-          }).then(async r => {
+          const { HANJA_LEVELS } = require("./hanja-data.js");
+          const MAX_TIMES = 4;   // 화면의 MAX_TIMES와 같아야 해요
+          const toAll = process.env.TO_ALL === "true";
+          const now = new Date();
+          const hour = (now.getUTCHours() + 9) % 24;            // 한국시간
+          const slot = String(hour).padStart(2, "0") + (now.getUTCMinutes() < 30 ? "00" : "30");
+          let failed = false;
+
+          async function send(level, filters) {
+            const items = level.themes.flatMap(t => t.items);
+            const [han] = items[Math.floor(Math.random() * items.length)];
+            const title = `${level.name} 한자 퀴즈 ✏️`;
+            const text = `${han} 은(는) 무슨 뜻일까요? 눌러서 맞혀 보세요!`;
+            const body = {
+              app_id: process.env.APP_ID,
+              target_channel: "push",
+              headings: { en: title, ko: title },
+              contents: { en: text, ko: text },
+              url: `${process.env.SITE}?q=${encodeURIComponent(han)}&lv=${level.id}`,
+              priority: 10,   // 높은 우선순위: 폰이 절전 상태여도 바로 전달
+              ttl: 1800       // 30분 안에 전달 못 하면 버림 (한밤중에 늦게 도착하는 것 방지)
+            };
+            if (filters) body.filters = filters; else body.included_segments = ["Total Subscriptions"];
+            const r = await fetch("https://api.onesignal.com/notifications", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "Authorization": "Key " + process.env.REST_KEY },
+              body: JSON.stringify(body)
+            });
             const t = await r.text();
-            console.log(r.status, t);
-            if (!r.ok || /"errors"/.test(t)) process.exit(1);
-          });
+            if (/not subscribed/.test(t)) { console.log(`${level.name}: 이 시간을 고른 구독자가 없어요`); return; }
+            console.log(level.name, r.status, t);
+            if (!r.ok || /"errors"/.test(t)) failed = true;
+          }
+
+          (async () => {
+            if (toAll) {
+              await send(HANJA_LEVELS[0]);
+            } else if (slot < "0600" || slot > "2200") {
+              console.log(`한국시간 ${slot.slice(0,2)}:${slot.slice(2)}은 알림 시간이 아니에요`);
+            } else {
+              console.log(`한국시간 ${slot.slice(0,2)}:${slot.slice(2)} 알림 확인`);
+              for (const level of HANJA_LEVELS) {
+                const filters = [];
+                for (let i = 1; i <= MAX_TIMES; i++) {
+                  if (i > 1) filters.push({ operator: "OR" });
+                  filters.push({ field: "tag", key: "t" + i, relation: "=", value: `${level.id}@${slot}` });
+                }
+                await send(level, filters);
+              }
+            }
+            if (failed) process.exit(1);
+          })();
           JS
