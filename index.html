@@ -19,20 +19,26 @@
   }catch(e){}
 })();
 </script>
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer onerror="window.__osState='blocked';document.dispatchEvent(new Event('os-state'))"></script>
 <script>
 // ▼▼ OneSignal App ID ▼▼
 const ONESIGNAL_APP_ID = "2bf2107a-74c9-4527-b3eb-5bbb706eb607";
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 if(!ONESIGNAL_APP_ID.startsWith("YOUR")){
+  window.__osState = "loading";
   OneSignalDeferred.push(async function(OneSignal){
-    await OneSignal.init({
-      appId: ONESIGNAL_APP_ID,
-      serviceWorkerPath: "hanja/push/OneSignalSDKWorker.js",
-      serviceWorkerParam: { scope: "/hanja/push/" }
-    });
-    window.__os = OneSignal;
-    document.dispatchEvent(new Event("os-ready"));
+    try{
+      await OneSignal.init({
+        appId: ONESIGNAL_APP_ID,
+        serviceWorkerPath: "hanja/push/OneSignalSDKWorker.js",
+        serviceWorkerParam: { scope: "/hanja/push/" }
+      });
+      window.__os = OneSignal; window.__osState = "ready";
+      document.dispatchEvent(new Event("os-ready"));
+    }catch(e){
+      window.__osState = "error"; window.__osErr = String((e && e.message) || e);
+      document.dispatchEvent(new Event("os-state"));
+    }
   });
 }
 </script>
@@ -408,6 +414,7 @@ let view="home";
 function markTab(v){document.querySelectorAll("#tabbar button").forEach(b=> b.dataset.v===v ? b.setAttribute("aria-current","page") : b.removeAttribute("aria-current"))}
 function showView(v){
   view=v;
+  try{ history.replaceState(null,"",location.pathname+(v==="home"?"":"#"+v)) }catch(e){}
   ["home","card","quiz","set"].forEach(x=>$("v-"+x).classList.toggle("hide",x!==v));
   markTab(v);
   if(v==="home") renderHome();
@@ -659,7 +666,14 @@ function renderPush(){
     return;
   }
   if(!n){ st.textContent="알림 시간을 추가하면 알림이 와요"; return; }
-  if(!window.__os){ st.textContent="알림 준비 중이에요…"; return; }
+  if(!window.__os){
+    const s=window.__osState;
+    st.textContent = s==="blocked" ? "알림 기능을 불러오지 못했어요 · 크롬으로 열어 주세요"
+      : s==="error" ? `알림 연결 오류 · ${window.__osErr||""}`
+      : s==="slow" ? "알림 연결이 늦어요 · 새로고침해 주세요"
+      : "알림 준비 중이에요…";
+    return;
+  }
   if(pushOn()){ st.textContent=`선택한 시간에 하루 ${n}번 알림이 와요`; return; }
   if("Notification" in window && Notification.permission==="denied"){ st.textContent="알림이 차단돼 있어요 · 브라우저 설정에서 허용해 주세요"; return; }
   st.textContent="알림이 꺼져 있어요 · 여기를 눌러 켜 주세요"; st.onclick=turnPushOn; st.style.cursor="pointer";
@@ -714,7 +728,9 @@ const params=new URLSearchParams(location.search);
 if(params.get("lv")){ const l=HANJA_LEVELS.find(x=>x.id===params.get("lv")); if(l){LV=l;store.set("hj:lv",l.id);$("lvBtn").textContent=LV.name+" ▾"} }
 const qItem=params.get("q") && ALL().find(x=>x[0]===params.get("q"));
 if(qItem){ startSession({type:"deep",item:qItem}); try{history.replaceState(null,"",location.pathname)}catch(e){} }
-else showView("home");
+else showView(["card","quiz","set"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "home");
+document.addEventListener("os-state",renderPush);
+setTimeout(()=>{ if(window.__osState==="loading"){ window.__osState="slow"; renderPush(); } },15000);
 </script>
 </body>
 </html>
