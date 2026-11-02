@@ -114,6 +114,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
 .ghost{background:transparent;border:2px solid var(--line);color:var(--ink);font-size:1.05rem;padding:12px}
 .ghost:disabled{opacity:.45}
 .ghost b{font-weight:400;background:var(--red);color:#fff;border-radius:999px;padding:0 8px;margin-left:4px}
+.ghost small{color:var(--muted);font-size:.85rem;margin-left:4px}
 .sec-title{display:flex;justify-content:space-between;align-items:baseline;margin:16px 2px 8px;font-size:1.05rem}
 .sec-title span{color:var(--muted);font-size:.95rem}
 .path{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
@@ -125,6 +126,34 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
 .stage-tile.current{box-shadow:inset 0 0 0 3px var(--red)}
 .stage-tile.current .mark{background:var(--ink);color:var(--surface)}
 .stage-tile.locked{opacity:.5}
+#v-home > *{flex:none}
+#path{position:relative;flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;align-content:start;padding-bottom:4px}
+#reviewBtn{margin-bottom:4px}
+.stage-tile .qt{font-size:.72rem;background:var(--chip);border-radius:6px;padding:1px 6px;color:var(--muted);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.stage-tile.cleared .mark.r2{background:#9AA6B8}
+.stage-tile.cleared .mark.r3{background:#E3A913}
+.dots{display:flex;gap:3px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.dots i.r1{background:var(--red)} .dots i.r2{background:#9AA6B8} .dots i.r3{background:#E3A913}
+.grad{display:flex;flex-direction:column;gap:2px;background:linear-gradient(135deg,#FFE8A3,#FFD15C);color:#5A3E00;border-radius:18px;padding:12px 14px;margin-bottom:10px;line-height:1.4}
+.grad b{font-weight:400;font-size:1.2rem}
+.qprompt{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:8px 0}
+.qprompt b{font-weight:400;font-size:clamp(2rem,10vw,2.8rem);line-height:1.2}
+.qprompt b.han{font-family:"Noto Serif KR",serif;font-weight:900;font-size:clamp(2.6rem,13vw,3.6rem);letter-spacing:.05em}
+.qprompt #qSub{color:var(--muted);font-size:1.3rem}
+.qprompt .blank{display:inline-block;width:.9em;height:.9em;border:3px dashed var(--red);border-radius:8px;vertical-align:-.08em;margin:0 .04em}
+.qprompt b.sent{font-weight:400;font-size:1.3rem;line-height:1.7;max-width:28ch;word-break:keep-all}
+.qprompt b.sent u{text-decoration-color:var(--red);text-decoration-thickness:3px;text-underline-offset:6px}
+.qprompt .paren{font-family:"Noto Serif KR",serif;font-weight:900;color:var(--red)}
+.stroke-svg{width:min(150px,38vw);height:min(150px,38vw);background:var(--bg);border-radius:12px}
+.secs{text-align:left;margin:10px auto 0;max-width:290px;font-size:.95rem}
+.secs div{display:flex;justify-content:space-between;padding:4px 2px;border-bottom:1px dashed var(--line)}
+.secs b{font-weight:400}
+.secs b.full{color:var(--ok)} .secs b.weak{color:var(--red)}
+.grad-btn{margin-top:8px;background:#5A3E00;color:#FFE8A3;font-size:1rem;padding:10px}
+.choices .hz{font-family:"Noto Serif KR",serif;font-weight:900;font-size:1.7rem;line-height:1}
+.bigstamp.r2{border-color:#8E99AB;color:#7A8597}
+.bigstamp.r3{border-color:#D99B00;color:#C58C00}
 .mt{margin-top:10px}
 .learn-done{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;text-align:center}
 .learn-done p{margin:0;font-size:1.5rem}
@@ -228,6 +257,22 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
 .switch[aria-checked="true"]::after{left:25px}
 .danger{color:var(--red)}
 
+.words ul{flex:1;min-width:0}
+.stroke-btn{flex:none;border:0;background:var(--ink);color:var(--surface);border-radius:10px;padding:6px 10px;font:inherit;font-size:.9rem;cursor:pointer;white-space:nowrap}
+.qtop .stroke-btn{padding:3px 10px;font-size:.85rem}
+.stroke-modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:center;justify-content:center;padding:16px}
+.sm-box{background:var(--surface);border-radius:20px;padding:14px;width:min(92vw,380px);display:flex;flex-direction:column;align-items:center;gap:10px}
+.sm-head{width:100%;display:flex;justify-content:space-between;align-items:center}
+.sm-head b{font-weight:400;font-size:1.15rem}
+.sm-head button{border:0;background:var(--chip);width:36px;height:34px;border-radius:10px;font-size:1rem;cursor:pointer}
+.sm-svg svg{width:min(72vw,300px);height:min(72vw,300px);background:var(--bg);border-radius:16px;display:block}
+.sm-num{font-size:64px;font-family:"Jua",sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:central}
+.sm-step{font-size:1.05rem;color:var(--muted);min-height:1.4em}
+.sm-ctrl{display:flex;gap:10px;width:100%}
+.sm-ctrl button{border:0;border-radius:14px;height:48px;font:inherit;cursor:pointer}
+.sm-ctrl #smPrev,.sm-ctrl #smNext{flex:0 0 56px;background:var(--ink);color:var(--surface);font-size:1.5rem}
+.sm-ctrl #smPrev:disabled,.sm-ctrl #smNext:disabled{opacity:.3}
+.sm-ctrl #smPlay{flex:1;background:var(--red);color:#fff;font-size:1.05rem}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:calc(100% - 32px);background:var(--ink);color:var(--surface);padding:12px 16px;border-radius:12px;font-size:1rem;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
 .toast.show{opacity:1}
 @media (prefers-reduced-motion: reduce){.card{transition:none}.pop,.bigstamp{animation:none}.bar i{transition:none}}
@@ -245,7 +290,8 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
 
   <main>
     <!-- 오늘 -->
-    <section id="v-home" class="view scroll">
+    <section id="v-home" class="view">
+      <div class="grad hide" id="gradCard"><b>🎓 졸업 축하해요!</b><span id="gradText"></span><button class="btn grad-btn" id="gradMock">실전 모의고사 (50문항)</button></div>
       <div class="streak">
         <div class="fire"><span id="streakNum">0</span><small>일 연속</small></div>
         <div class="streak-msg" id="streakMsg"></div>
@@ -254,7 +300,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
       <button class="btn primary" id="todayBtn"></button>
       <div class="sec-title">도장 깨기 <span id="pathCount"></span></div>
       <div class="path" id="path"></div>
-      <button class="btn ghost mt" id="reviewBtn">틀린 한자 복습<b id="wrongCount">0</b></button>
+      <button class="btn ghost mt" id="reviewBtn">틀린 한자 복습<b>0</b></button>
     </section>
 
     <!-- 카드 -->
@@ -278,7 +324,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
         <span class="count" id="count"></span>
         <button id="next" aria-label="다음 한자">›</button>
       </div>
-      <div class="words" id="words"><h2>낱말</h2><ul id="wordList"></ul></div>
+      <div class="words" id="words"><h2>낱말</h2><ul id="wordList"></ul><button class="stroke-btn" id="cardStroke">✍️ 획순</button></div>
     </section>
 
     <!-- 퀴즈 -->
@@ -289,7 +335,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
         <span id="lessonTitle"></span>
       </div>
       <div id="learn" class="hide">
-        <div class="qtop"><span>먼저 익혀요</span></div>
+        <div class="qtop"><span>먼저 익혀요</span><button class="stroke-btn" id="learnStroke">✍️ 획순 보기</button></div>
         <div class="bar"><i id="learnBar"></i></div>
         <div class="qcard learn-card">
           <div class="tian"><span class="big" id="lHan"></span></div>
@@ -308,8 +354,9 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
         <div class="qtop"><span id="qNum"></span><span>맞힌 개수 <span id="qScore">0</span></span></div>
         <div class="bar"><i id="qBar"></i></div>
         <div class="qcard">
-          <div class="tian"><span class="big" id="qHan"></span></div>
-          <div class="qask">이 한자의 뜻과 소리는?</div>
+          <div class="tian" id="qTian"><span class="big" id="qHan"></span></div>
+          <div class="qprompt hide" id="qPrompt"><b id="qMain"></b><span id="qSub"></span></div>
+          <div class="qask" id="qAsk">이 한자의 뜻과 소리는?</div>
         </div>
         <div class="choices" id="choices"></div>
         <div class="feedback" id="feedback" aria-live="polite"></div>
@@ -320,6 +367,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
         <div class="medal" id="medal"></div>
         <p id="endText"></p>
         <small id="endSub"></small>
+        <div class="secs" id="endSecs"></div>
         <button class="btn primary" id="endMain"></button>
         <button class="btn ghost" id="endSecond"></button>
       </div>
@@ -339,6 +387,7 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
       </div>
       <div class="set-group">
         <div class="row"><span>카드·퀴즈 자동으로 읽어주기</span><button class="switch" id="sndSwitch" role="switch" aria-checked="true" aria-label="자동으로 읽어주기"></button></div>
+        <div class="row mt"><span>모든 단계 열기 (테스트용)</span><button class="switch" id="unlockSwitch" role="switch" aria-checked="false" aria-label="모든 단계 열기"></button></div>
       </div>
       <button class="btn ghost danger" id="resetBtn">이 급수 학습 기록 지우기</button>
     </section>
@@ -352,6 +401,14 @@ main{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px}
   </nav>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<div class="stroke-modal hide" id="strokeModal" role="dialog" aria-modal="true" aria-label="획순 보기">
+  <div class="sm-box">
+    <div class="sm-head"><b id="smTitle"></b><button id="smClose" aria-label="닫기">✕</button></div>
+    <div class="sm-svg" id="smSvg"></div>
+    <div class="sm-step" id="smStep"></div>
+    <div class="sm-ctrl"><button id="smPrev" aria-label="이전 획">‹</button><button id="smPlay">▶ 처음부터</button><button id="smNext" aria-label="다음 획">›</button></div>
+  </div>
+</div>
 
 <script src="hanja-data.js"></script>
 <script>
@@ -373,10 +430,45 @@ let LV = HANJA_LEVELS.find(l=>l.id===store.get("hj:lv","8")) || HANJA_LEVELS[0];
 const ALL = () => LV.themes.flatMap(t=>t.items);
 const ALL_IDX = () => LV.themes.length;
 const itemsOf = t => t===ALL_IDX() ? ALL() : LV.themes[t].items;
-const stages = () => [...LV.themes.map(t=>({name:t.name,items:t.items})), {name:"최종 시험",items:ALL(),final:true}];
-const stageLabel = i => stages()[i].final ? "최종 시험" : `${i+1}단계`;
-const prog = () => store.get("hj:prog:"+LV.id,{cleared:[]});
-const wrongs = () => store.get("hj:wrong:"+LV.id,{});
+const TYPE_NAMES={1:"뜻·소리",2:"한자 찾기",3:"문장 읽기",mix:"섞어서",mix12:"섞어서",exam:"실전 50문항"};
+let _stCache=null;
+// 모든 테마 뜻·소리 → 모든 테마 한자 찾기 → 모든 테마 문장 읽기(+필순), 각 묶음 뒤에 중간 점검, 마지막에 실전 모의고사
+function stages(){
+  if(_stCache && _stCache.lv===LV.id) return _stCache.list;
+  const list=[], T=LV.themes; let n=0;
+  [1,2,3].forEach((q,bi)=>{
+    T.forEach((t,ti)=>{ n++; const prev = bi===0 ? T.slice(0,ti).flatMap(x=>x.items) : ALL().filter(x=>!t.items.includes(x));
+      list.push({kind:"lesson",label:`${n}단계`,sub:t.name,items:t.items,qtype:q,prev}); });
+    if(bi<2) list.push({kind:"check",label:"중간 점검",sub:`${TYPE_NAMES[q]} 복습`,items:ALL(),qtype:q===1?1:"mix12"});
+  });
+  list.push({kind:"final",label:"최종 시험",sub:"실전 모의고사",items:ALL(),qtype:"exam"});
+  _stCache={lv:LV.id,list}; return list;
+}
+const stageLabel = i => stages()[i].label;
+const prog = () => { const p=store.get("hj:prog3:"+LV.id,{done:[]}); const S=stages(); while(p.done.length<S.length) p.done.push(false); return p; };
+const saveProg = p => store.set("hj:prog3:"+LV.id,p);
+const totalStamps = () => prog().done.filter(Boolean).length;
+const graduated = () => prog().done.every(Boolean);
+function nextTarget(){ const i=prog().done.findIndex(x=>!x); return i>=0 ? {idx:i} : null; }
+const stageWhat = t => stageLabel(t.idx);
+const wordFor = it => HANJA_WORDS.filter(([h])=>h.includes(it[0]));
+// 틀린 한자 복습 (간격 반복): {한자: {left: 남은 복습 횟수, due: 다음 복습 날짜, step}}
+const INTERVALS=[1,2,4,7];   // 복습에서 맞히면 1일 → 2일 → 4일 → 7일 뒤에 다시
+const NEED={1:2, 2:3, fail:4};  // 2번 만에 맞힘: 2회, 3번 만에 맞힘: 3회, 끝내 틀림: 4회 복습
+const addDays=n=>{const d=new Date(); d.setDate(d.getDate()+n); return dayKey(d)};
+function wrongs(){
+  const w=store.get("hj:wrong:"+LV.id,{});
+  for(const k in w) if(typeof w[k]==="number") w[k]={left:w[k],due:todayKey(),step:0};   // 예전 형식 변환
+  return w;
+}
+const isDue = e => e.due<=todayKey();
+const dueList = () => { const w=wrongs(); return Object.keys(w).filter(k=>isDue(w[k])); };
+function markWrong(w,c,need){ const e=w[c]; w[c]={left:Math.max(e?e.left:0,need),due:todayKey(),step:0}; }
+function markRight(w,c){
+  const e=w[c]; if(!e || !isDue(e)) return;          // 오늘 이미 복습한 한자는 하루 한 번만 셈
+  e.left--; if(e.left<=0){ delete w[c]; return; }
+  e.due=addDays(INTERVALS[Math.min(e.step,INTERVALS.length-1)]); e.step++;
+}
 
 /* ---------- 별, 연속 기록 ---------- */
 let stars = store.get("hj:stars", store.get("h8stars",0));
@@ -396,6 +488,9 @@ function markToday(){
   store.set("hj:streak",s);
   return s.count;
 }
+
+/* ---------- 테스트용: 모든 단계 열기 ---------- */
+let unlockAll=store.get("hj:unlock",false);
 
 /* ---------- 소리 ---------- */
 const canSpeak="speechSynthesis" in window;
@@ -426,7 +521,6 @@ document.querySelectorAll("#tabbar button").forEach(b=>b.onclick=()=>{ if(Q.less
 $("lvBtn").onclick=()=>{ if(Q.lesson) exitLesson(); showView("set") };
 
 /* ---------- 오늘(홈) ---------- */
-function nextStageIdx(){const c=prog().cleared;return stages().findIndex((_,i)=>!c.includes(i))}
 function renderHome(){
   const st=streakInfo();
   $("streakNum").textContent=st.shown;
@@ -441,27 +535,32 @@ function renderHome(){
     el.innerHTML=`${names[i]}<i>${st.days[k]?"참":d.getDate()}</i>`; wk.appendChild(el);
   }
   // 오늘의 미션 버튼
-  const ni=nextStageIdx(), S=stages(), w=Object.keys(wrongs()).length;
+  const nt=nextTarget(), S=stages(), w=dueList().length, wt=Object.keys(wrongs()).length;
+  $("gradCard").classList.toggle("hide",!!nt);
+  if(!nt) $("gradText").textContent=`${LV.name} 도장 ${S.length}개를 모두 모았어요! 시험 전에는 실전 모의고사로 연습해요.`;
   const btn=$("todayBtn");
-  const what = ni>=0 ? stageLabel(ni) : (w?"틀린 한자 복습":"랜덤 퀴즈 10문제");
+  const what = nt ? stageWhat(nt) : (w?"틀린 한자 복습":"오늘의 퀴즈 15문제");
   btn.className = "btn primary" + (st.doneToday ? " done" : "");
-  btn.textContent = st.doneToday ? `✔ 오늘 완료 · ${ni>=0?"다음 ":""}${what}` : `오늘의 도장 깨기 · ${what}`;
-  btn.onclick=()=>{ if(ni>=0) startSession({type:"stage",idx:ni}); else startSession({type:w?"review":"random"}) };
+  btn.textContent = st.doneToday ? `✔ 오늘 완료 · ${nt?"다음 ":""}${what}` : `오늘의 도장 깨기 · ${what}`;
+  btn.onclick=()=>{ if(nt) startSession({type:"stage",idx:nt.idx}); else startSession({type:w?"review":"random"}) };
   // 도장 깨기 길
-  const c=prog().cleared, path=$("path"); path.innerHTML="";
-  $("pathCount").textContent=`${c.length} / ${S.length}`;
+  const D=prog().done, path=$("path"); path.innerHTML="";
+  $("pathCount").textContent=`도장 ${totalStamps()} / ${S.length}`;
   S.forEach((s,i)=>{
-    const b=document.createElement("button");
-    const cleared=c.includes(i), current=i===ni, locked=!cleared&&!current;
-    b.className="stage-tile"+(cleared?" cleared":"")+(current?" current":"")+(locked?" locked":"");
-    b.innerHTML=`<span class="mark">${cleared?"참":locked?"🔒":"▶"}</span><span class="nm">${stageLabel(i)}</span><span class="th">${s.final?"전체 한자":s.name}</span>`;
-    b.setAttribute("aria-label",`${stageLabel(i)} ${s.final?"":s.name} ${cleared?"도장 받음":locked?"잠김":"도전하기"}`);
-    b.onclick=()=> locked ? toast("앞 단계 도장을 먼저 받아요!") : startSession({type:"stage",idx:i});
+    const b=document.createElement("button"), done=D[i];
+    const open = unlockAll || i===0 || D[i-1] || done, current = !!nt && i===nt.idx;
+    b.className="stage-tile"+(done?" cleared":"")+(current?" current":"")+(!open?" locked":"");
+    b.innerHTML=`<span class="mark">${done?"참":!open?"🔒":"▶"}</span><span class="nm">${s.label}</span><span class="th">${s.sub}</span><span class="qt">${TYPE_NAMES[s.qtype]}</span>`;
+    b.setAttribute("aria-label",`${s.label} ${s.sub} ${TYPE_NAMES[s.qtype]} ${done?"도장 받음":!open?"잠김":"도전하기"}`);
+    b.onclick=()=> !open ? toast("앞 단계 도장을 먼저 받아요!") : startSession({type:"stage",idx:i});
     path.appendChild(b);
   });
-  $("wrongCount").textContent=w; $("reviewBtn").disabled=!w;
+  $("reviewBtn").innerHTML = w ? `틀린 한자 복습<b>${w}</b>` : wt ? `오늘 복습 끝! 👍 <small>${wt}개는 다음에 또 나와요</small>` : `틀린 한자 복습<b>0</b>`;
+  $("reviewBtn").disabled=!w;
+  const cur=path.querySelector(".current"); if(cur) path.scrollTop=Math.max(0,cur.offsetTop-8);
 }
 $("reviewBtn").onclick=()=>startSession({type:"review"});
+$("gradMock").onclick=()=>startSession({type:"mock"});
 
 /* ---------- 카드 ---------- */
 let cTheme=0, cIdx=0;
@@ -479,6 +578,7 @@ function renderCard(){
   $("fHan").textContent=it[0]; $("bHan").textContent=it[0]; $("bHun").textContent=it[1]; $("bTip").textContent=it[2];
   $("count").textContent=`${cIdx+1} / ${list.length}`;
   $("prev").disabled=cIdx===0; $("next").disabled=cIdx===list.length-1;
+  $("cardStroke").classList.toggle("hide",!STROKES(it[0]));
   const wl=$("wordList"); wl.innerHTML="";
   const words=HANJA_WORDS.filter(([h])=>h.includes(it[0])).slice(0,3);
   $("words").classList.toggle("hide",!words.length);
@@ -490,21 +590,73 @@ $("next").onclick=()=>{if(cIdx<itemsOf(cTheme).length-1){cIdx++;renderCard()}};
 
 /* ---------- 퀴즈 / 레슨 ---------- */
 const Q={ctx:null,list:[],i:0,score:0,lesson:false,active:false,learnIdx:0,qTheme:0};
+// 문제 유형 (실제 한국어문회 8급 시험 형식)
+//  hunum: 한자 → 훈과 음 | hun: 한자 → 훈만 | um: 한자 → 음만 | find: 훈 또는 음만 보고 → 한자
+//  sentHun: 문장 밑줄 말 → 한자 | sentUm: 문장 속 (한자) → 음 | stroke: 진한 획은 몇 번째?
+const HUN = it => it[1].split(" ").slice(0,-1).join(" ");
+const UM  = it => it[1].split(" ").slice(-1)[0];
+const POOLS={1:["hunum","hunum","hun","um"],2:["find","find","sentHun"],3:["sentUm","sentUm","sentUm","stroke"]};
+POOLS.mix12=[...POOLS[1],...POOLS[2]]; POOLS.mix=[...POOLS[1],...POOLS[2],...POOLS[3]];
+const CONFUSE=[["一","二","三"],["五","六","七","八","九","十"],["大","小","中"],["東","西","南","北"],["校","敎","學","室"],["日","月","火","水","木","金","土"],["父","母","兄","弟","女","人"],["王","國","民","韓","軍"],["白","靑"],["門","室"],["外","中"],["長","萬"],["先","生","年"],["山","土"]];
+const ORD=["첫","두","세","네","다섯","여섯","일곱","여덟","아홉","열","열한","열두","열세","열네","열다섯","열여섯","열일곱"];
+const SENT = c => (typeof HANJA_SENT!=="undefined" && HANJA_SENT[c]) || null;
+const STROKES = c => (typeof HANJA_STROKES!=="undefined" && HANJA_STROKES[c]) || null;
+function canDo(type,it){ if(type==="sentHun"||type==="sentUm") return !!SENT(it[0]); if(type==="stroke") return !!STROKES(it[0]) && STROKES(it[0]).length>=3; return true; }
+function pickType(pool,it){ const ok=pool.filter(t=>canDo(t,it)); return ok.length ? ok[Math.floor(Math.random()*ok.length)] : "hunum"; }
+function qType(ctx,it){
+  if(ctx.type==="stage") return pickType(POOLS[stages()[ctx.idx].qtype]||POOLS.mix,it);
+  if(ctx.type==="review"||ctx.type==="random") return pickType(POOLS.mix,it);
+  return "hunum";
+}
+// 헷갈리는 짝을 오답 보기에 먼저 넣기 (key가 같은 보기는 겹치지 않게)
+function pickOthers(it,n,ok,key){
+  key = key || (x=>x[0]);
+  const all=ALL().filter(x=>x[0]!==it[0] && ok(x));
+  const grp=CONFUSE.filter(g=>g.includes(it[0])).flat();
+  const near=shuffle(all.filter(x=>grp.includes(x[0]))).slice(0,2);
+  const seen=new Set([key(it)]), out=[];
+  for(const x of [...near, ...shuffle(all.filter(x=>!near.includes(x)))]){ if(out.length>=n) break; const k=key(x); if(!seen.has(k)){ seen.add(k); out.push(x); } }
+  return out;
+}
 function buildList(ctx){
   const all=ALL();
   if(ctx.type==="practice") return itemsOf(Q.qTheme).length>12 ? shuffle(itemsOf(Q.qTheme)).slice(0,10) : shuffle(itemsOf(Q.qTheme));
-  if(ctx.type==="stage"){const s=stages()[ctx.idx]; return s.final ? shuffle(all).slice(0,15) : shuffle(s.items)}
-  if(ctx.type==="review"){const w=wrongs(); return shuffle(all.filter(x=>w[x[0]])).slice(0,10)}
-  if(ctx.type==="random") return shuffle(all).slice(0,10);
+  if(ctx.type==="stage"){
+    const s=stages()[ctx.idx];
+    if(s.kind==="check") return shuffle(s.items).slice(0,10);
+    // 앞에서 배운 한자를 3문제 섞기(교차 연습) + 5문제가 안 되면 더 채우기
+    const pad = Math.max(0,5-s.items.length), mix = s.prev.length ? 3 : 0;
+    const pool = s.prev.length ? s.prev : all.filter(x=>!s.items.includes(x));
+    return shuffle([...s.items, ...shuffle(pool).slice(0,pad+mix)]);
+  }
+  if(ctx.type==="review"){const d=dueList(); return shuffle(all.filter(x=>d.includes(x[0]))).slice(0,10)}
+  if(ctx.type==="random") return shuffle(all).slice(0,15);
   if(ctx.type==="deep") return [ctx.item, ...shuffle(all.filter(x=>x[0]!==ctx.item[0])).slice(0,4)];
   return [];
 }
+// 실전 모의고사: 실제 시험 순서 그대로 50문항
+function buildExam(){
+  const all=ALL(), L=[], T=[], S=[];
+  const add=(n,type,sec,pool)=>shuffle(pool||all).slice(0,n).forEach(it=>{L.push(it);T.push(type);S.push(sec)});
+  add(10,"sentUm","문장 속 한자 읽기",all.filter(x=>SENT(x[0])));
+  add(10,"find","훈·음 보고 한자 찾기");
+  add(10,"sentHun","밑줄 말에 맞는 한자",all.filter(x=>SENT(x[0])));
+  add(10,"hunum","훈과 음");
+  add(4,"hun","훈 고르기");
+  add(4,"um","음 고르기");
+  const sk=all.filter(x=>canDo("stroke",x));
+  if(sk.length) add(2,"stroke","필순",sk); else add(2,"um","음 고르기");
+  return {L,T,S};
+}
 function lessonTitle(ctx){
-  if(ctx.type==="stage"){const s=stages()[ctx.idx]; return `${stageLabel(ctx.idx)} 도장 깨기`}
-  return {review:"틀린 한자 복습",random:"오늘의 랜덤 퀴즈",deep:"알림 퀴즈"}[ctx.type]||"";
+  if(ctx.type==="stage"){const s=stages()[ctx.idx]; return s.kind==="lesson" ? `${s.label} · ${s.sub} ${TYPE_NAMES[s.qtype]}` : s.kind==="final" ? "최종 시험 · 실전 50문항" : s.label}
+  return {review:"틀린 한자 복습",random:"오늘의 퀴즈",mock:"실전 모의고사",deep:"알림 퀴즈"}[ctx.type]||"";
 }
 function startSession(ctx){
-  Q.ctx=ctx; Q.lesson=ctx.type!=="practice"; Q.list=buildList(ctx); Q.i=0; Q.score=0; Q.active=true;
+  ctx.exam = ctx.type==="mock" || (ctx.type==="stage" && stages()[ctx.idx].kind==="final");
+  Q.ctx=ctx; Q.lesson=ctx.type!=="practice"; Q.i=0; Q.score=0; Q.active=true; Q.res=[];
+  if(ctx.exam){ const e=buildExam(); Q.list=e.L; Q.types=e.T; Q.secs=e.S; }
+  else { Q.list=buildList(ctx); Q.types=Q.list.map(it=>qType(ctx,it)); Q.secs=null; }
   if(!Q.list.length){toast("복습할 한자가 없어요!");Q.active=false;return}
   ["home","card","set"].forEach(x=>$("v-"+x).classList.add("hide")); $("v-quiz").classList.remove("hide"); view="quiz";
   markTab("quiz");
@@ -514,7 +666,7 @@ function startSession(ctx){
   $("lessonTitle").textContent=lessonTitle(ctx);
   if(!Q.lesson) renderChips($("qThemes"),Q.qTheme,i=>{Q.qTheme=i;startSession({type:"practice"})});
   $("quizEnd").classList.add("hide");
-  const firstTime = ctx.type==="stage" && !stages()[ctx.idx].final && !prog().cleared.includes(ctx.idx);
+  const firstTime = ctx.type==="stage" && stages()[ctx.idx].kind==="lesson" && stages()[ctx.idx].qtype===1 && !prog().done[ctx.idx];
   if(firstTime){ Q.learnIdx=0; Q.learnList=stages()[ctx.idx].items; $("quizPlay").classList.add("hide"); $("learn").classList.remove("hide"); showLearn(); }
   else { $("learn").classList.add("hide"); $("quizPlay").classList.remove("hide"); showQ(); }
 }
@@ -522,6 +674,7 @@ function showLearn(){
   const L=Q.learnList, done=Q.learnIdx>=L.length;
   [$("lHan").parentElement,$("lHun"),$("lTip")].forEach(el=>el.classList.toggle("hide",done));
   $("learnDone").classList.toggle("hide",!done);
+  $("learnStroke").classList.toggle("hide",done);
   $("learnBar").style.width=`${Math.min(Q.learnIdx+1,L.length)/L.length*100}%`;
   $("learnPrev").disabled = Q.learnIdx===0;
   $("learnNext").disabled = done;
@@ -534,6 +687,7 @@ function showLearn(){
   }
   const it=L[Q.learnIdx];
   $("lHan").textContent=it[0]; $("lHun").textContent=it[1]; $("lTip").textContent=it[2];
+  $("learnStroke").classList.toggle("hide",!STROKES(it[0]));
   $("learnNum").textContent=`${Q.learnIdx+1} / ${L.length}`;
   speak(it[1]);
 }
@@ -543,32 +697,90 @@ $("learnPrev").onclick=()=>{ if(Q.learnIdx>0){Q.learnIdx--;showLearn()} };
 function exitLesson(){Q.lesson=false;Q.active=false;$("tabbar").classList.remove("hide");try{speechSynthesis.cancel()}catch(e){}}
 $("qExit").onclick=()=>{exitLesson();showView("home")};
 
+function strokeSvg(c,k){
+  const paths=STROKES(c).map((d,i)=>`<path d="${d}" fill="${i===k?"var(--ink)":"var(--line)"}"/>`).join("");
+  return `<svg class="stroke-svg" viewBox="0 0 1024 1024" aria-label="${c}"><g transform="translate(0,900) scale(1,-1)">${paths}</g></svg>`;
+}
+// 문제 하나 만들기 → {main(HTML), sub, ask, opts:[{label,correct,hz}], note, say}
+function makeQ(it,type){
+  const q={main:"",sub:"",ask:"",opts:[],note:"",say:"",tian:false};
+  const asOpts=(list,lab,hz)=>shuffle(list.map(x=>({label:lab(x),correct:x===it,hz})));
+  if(type==="hunum"||type==="hun"||type==="um"){
+    q.tian=true;
+    if(type==="hunum"){ q.ask="이 한자의 훈(뜻)과 음(소리)은?"; q.opts=asOpts([it,...pickOthers(it,3,x=>x[1]!==it[1])],x=>x[1]); }
+    if(type==="hun"){ q.ask="이 한자의 훈(뜻)은?"; q.opts=asOpts([it,...pickOthers(it,3,x=>HUN(x)!==HUN(it),HUN)],HUN); }
+    if(type==="um"){ q.ask="이 한자의 음(소리)은?"; q.opts=asOpts([it,...pickOthers(it,3,x=>UM(x)!==UM(it),UM)],UM); }
+  }
+  else if(type==="find"){
+    const byHun=Math.random()<.5, key=byHun?HUN(it):UM(it);
+    q.main=key; q.sub=byHun?"훈(뜻)":"음(소리)"; q.say=key;
+    q.ask=byHun?`훈(뜻)이 '${key}'인 한자는?`:`음(소리)이 '${key}'인 한자는?`;
+    q.opts=asOpts([it,...pickOthers(it,3,x=>byHun?HUN(x)!==key:UM(x)!==key)],x=>x[0],true);
+  }
+  else if(type==="sentHun"){
+    const s=SENT(it[0])[0];
+    q.main=s.replace(/\{(.+?)\}/,"<u>$1</u>"); q.cls="sent"; q.say=s.replace(/[{}]/g,"");
+    q.ask="밑줄 친 말에 알맞은 한자는?";
+    q.opts=asOpts([it,...pickOthers(it,3,x=>HUN(x)!==HUN(it))],x=>x[0],true);
+  }
+  else if(type==="sentUm"){
+    const s=SENT(it[0]), ans=s[2]||UM(it), trap=s[3];
+    q.main=s[1].replace(`(${it[0]})`,`<span class="paren">(${it[0]})</span>`); q.cls="sent";
+    q.ask="( ) 안 한자의 음(소리)은?";
+    const others=pickOthers(it,3,x=>UM(x)!==ans&&UM(x)!==trap,UM).map(UM);
+    const labels=[ans,...(trap?[trap]:[]),...others].slice(0,4);
+    q.opts=shuffle(labels.map((l,i)=>({label:l,correct:i===0})));
+    if(s[2]) q.note=`이 낱말에서는 '${s[2]}'로 읽어요. (본래 음: ${UM(it)})`;
+  }
+  else if(type==="stroke"){
+    const n=STROKES(it[0]).length, k=Math.floor(Math.random()*n);
+    q.main=strokeSvg(it[0],k); q.cls="svg"; q.ask="진하게 표시한 획은 몇 번째로 쓸까요?";
+    const nums=[...Array(n).keys()].filter(i=>i!==k).sort((a,b)=>Math.abs(a-k)-Math.abs(b-k)).slice(0,3);
+    q.opts=shuffle([k,...nums].map(i=>({label:`${ORD[i]||i+1} 번째`,correct:i===k})));
+    q.note=`${it[0]}은(는) 모두 ${n}획이에요.`;
+  }
+  return q;
+}
 function showQ(){
-  const it=Q.list[Q.i];
-  $("qHan").textContent=it[0];
-  $("qNum").textContent=`${Q.i+1}번 / ${Q.list.length}문제`;
+  const it=Q.list[Q.i], type=Q.types[Q.i]; Q.tries=0;
+  const q=makeQ(it,type); Q.cur={it,type,q};
+  $("qTian").classList.toggle("hide",!q.tian); $("qPrompt").classList.toggle("hide",q.tian);
+  if(q.tian) $("qHan").textContent=it[0];
+  else { $("qMain").className=q.cls||""; $("qMain").innerHTML=q.main; $("qSub").textContent=q.sub; }
+  $("qAsk").textContent=q.ask;
+  if(q.say) speak(q.say);
+  $("qNum").textContent=`${Q.i+1}번 / ${Q.list.length}문제`+(Q.secs?` · ${Q.secs[Q.i]}`:"");
   $("qScore").textContent=Q.score;
   $("qBar").style.width=`${Q.i/Q.list.length*100}%`;
   $("feedback").textContent=""; $("qNext").classList.add("hide");
-  const opts=shuffle([it,...shuffle(ALL().filter(x=>x[0]!==it[0])).slice(0,3)]);
   const box=$("choices"); box.innerHTML="";
-  opts.forEach((o,n)=>{
-    const b=document.createElement("button"); b.dataset.ans=o[1];
-    b.innerHTML=`<span class="num">${n+1}</span><span>${o[1]}</span>`;
-    b.setAttribute("aria-label",`${n+1}번 ${o[1]}`);
-    b.onclick=()=>answer(b,o,it); box.appendChild(b);
+  q.opts.forEach((o,n)=>{
+    const b=document.createElement("button"); b.dataset.correct=o.correct?"1":"";
+    b.innerHTML=`<span class="num">${n+1}</span><span${o.hz?' class="hz"':""}>${o.label}</span>`;
+    b.setAttribute("aria-label",`${n+1}번 ${o.label}`);
+    b.onclick=()=>answer(b,o); box.appendChild(b);
   });
 }
-function answer(btn,o,it){
-  [...$("choices").children].forEach(b=>{b.disabled=true;if(b.dataset.ans===it[1])b.classList.add("ok")});
-  const w=wrongs();
-  if(o[0]===it[0]){
-    Q.score++; $("qScore").textContent=Q.score; btn.classList.add("pop");
-    if(w[it[0]]){ w[it[0]]--; if(w[it[0]]<=0) delete w[it[0]]; }
-    $("feedback").textContent=`딩동댕! ${it[0]} = ${it[1]} 🎉`; speak(`딩동댕! ${it[1]}`);
+const MAX_TRIES=3;   // 한 문제에 고를 수 있는 기회 (실전 모의고사는 1번)
+function answer(btn,o){
+  const {it,q}=Q.cur, w=wrongs(), maxT=Q.ctx.exam?1:MAX_TRIES;
+  if(!o.correct && Q.tries+1<maxT){
+    Q.tries++; btn.classList.add("no"); btn.disabled=true;
+    $("feedback").textContent=`아쉬워요! 다시 골라 보세요 (기회 ${maxT-Q.tries}번 남았어요)`;
+    speak("다시 골라 볼까요?");
+    return;
+  }
+  [...$("choices").children].forEach(b=>{b.disabled=true;if(b.dataset.correct)b.classList.add("ok")});
+  const info=`${it[0]} = ${it[1]}`+(q.note?` · ${q.note}`:"");
+  if(o.correct){
+    Q.score++; Q.res[Q.i]=true; $("qScore").textContent=Q.score; btn.classList.add("pop");
+    if(Q.tries===0){ markRight(w,it[0]); $("feedback").textContent=`딩동댕! ${info} 🎉`; }
+    else { markWrong(w,it[0],NEED[Q.tries]); $("feedback").textContent=`${Q.tries+1}번 만에 맞혔어요! ${info} 👍`; }
+    speak(`딩동댕! ${it[1]}`);
   }else{
-    btn.classList.add("no"); w[it[0]]=Math.max(w[it[0]]||0,2);
-    $("feedback").textContent=`정답은 ‘${it[1]}’! ${it[2]}`; speak(`정답은 ${it[1]}`);
+    Q.res[Q.i]=false; btn.classList.add("no"); markWrong(w,it[0],NEED.fail);
+    const right=q.opts.find(x=>x.correct).label;
+    $("feedback").textContent=`정답은 ‘${right}’! ${info}`; speak(`정답은 ${right}`);
   }
   store.set("hj:wrong:"+LV.id,w);
   $("qNext").textContent = Q.i===Q.list.length-1 ? "결과 보기" : "다음 문제";
@@ -580,32 +792,43 @@ function endQuiz(){
   Q.active=false;
   $("qBar").style.width="100%";
   $("quizPlay").classList.add("hide"); $("quizEnd").classList.remove("hide");
-  const n=Q.list.length, r=Q.score/n, got=r===1?3:r>=.7?2:r>=.4?1:0;
+  const ctx=Q.ctx, n=Q.list.length, r=Q.score/n, got=r===1?3:r>=.7?2:r>=.4?1:0, passRate=ctx.exam?.7:.8;
   stars+=got; store.set("hj:stars",stars); renderStars();
   $("medal").textContent="⭐".repeat(got)+"☆".repeat(3-got);
-  $("endText").textContent=`${n}문제 중 ${Q.score}개 맞혔어요!`;
+  const need=Math.ceil(n*passRate);
+  $("endText").textContent = ctx.exam ? `${n}문항 중 ${Q.score}개 · ${Q.score>=need?"합격! 🎉":"불합격"}` : `${n}문제 중 ${Q.score}개 맞혔어요!`;
+  // 실전 모의고사: 영역별 결과
+  if(Q.secs){
+    const st={}; Q.secs.forEach((s,i)=>{ st[s]=st[s]||[0,0]; st[s][1]++; if(Q.res[i]) st[s][0]++; });
+    $("endSecs").innerHTML=Object.entries(st).map(([s,[a,b]])=>`<div><span>${s}</span><b class="${a===b?"full":a/b<.7?"weak":""}">${a} / ${b}</b></div>`).join("");
+  } else $("endSecs").innerHTML="";
   const sub=[]; let stamped=false;
-  // 단계 도장
-  const ctx=Q.ctx;
+  if(ctx.exam && Q.score<need) sub.push(`${need}개 넘게 맞혀야 합격이에요. 빨간 영역을 더 연습해요!`);
+  let sr=1;
   if(ctx.type==="stage"){
-    if(r>=.8){
-      const p=prog(); if(!p.cleared.includes(ctx.idx)){p.cleared.push(ctx.idx);store.set("hj:prog:"+LV.id,p)}
-      stamped=true; sub.push(`${ctx.idx+1}단계 도장을 받았어요!`);
-    }else sub.push("80% 넘게 맞히면 도장을 받아요. 다시 도전!");
+    const p=prog(), s=stages()[ctx.idx];
+    if(r>=passRate){
+      stamped=true;
+      if(!p.done[ctx.idx]){
+        p.done[ctx.idx]=true; saveProg(p);
+        sub.push(`${s.label} 도장을 받았어요!`);
+        if(graduated()) sub.push(`🎓 ${LV.name} 졸업! 도장을 모두 모았어요!`);
+      } else sub.push(`${s.label} 복습 완료!`);
+    }else if(!ctx.exam) sub.push("80% 넘게 맞히면 도장을 받아요. 다시 도전!");
   }
   // 오늘의 도장 (연속 기록)
   if(n>=4){ const c=markToday(); if(c){ stamped=true; sub.push(`오늘의 도장 쾅! 🔥 ${c}일 연속`) } }
-  const wc=Object.keys(wrongs()).length;
-  if(ctx.type==="review") sub.push(wc?`복습할 한자가 ${wc}개 남았어요.`:"틀린 한자를 다 복습했어요! 👏");
-  $("endStamp").innerHTML = stamped ? `<div class="bigstamp"><b>참</b>잘했어요</div>` : "";
+  const wc=dueList().length;
+  if(ctx.type==="review") sub.push(wc?`오늘 복습할 한자가 ${wc}개 남았어요.`:(Object.keys(wrongs()).length?"오늘 복습 끝! 며칠 뒤에 다시 확인해요 📅":"틀린 한자를 다 외웠어요! 👏"));
+  $("endStamp").innerHTML = stamped ? `<div class="bigstamp r${sr}"><b>참</b>잘했어요</div>` : "";
   $("endSub").textContent=sub.join(" ");
   if(stamped) speak("참 잘했어요!");
   // 버튼
   const main=$("endMain"), second=$("endSecond");
-  const ni=nextStageIdx();
-  if(ctx.type==="stage" && r>=.8 && ni>=0){ main.textContent=`다음 단계 도전 ▶ (${stageLabel(ni)})`; main.onclick=()=>startSession({type:"stage",idx:ni}); }
+  const nt=nextTarget();
+  if(ctx.type==="stage" && r>=passRate && nt){ main.textContent=`다음 도전 ▶ (${stageWhat(nt)})`; main.onclick=()=>startSession({type:"stage",idx:nt.idx}); }
   else if(ctx.type==="review" && wc){ main.textContent="한 번 더 복습하기"; main.onclick=()=>startSession({type:"review"}); }
-  else { main.textContent="다시 하기"; main.onclick=()=>startSession(ctx.type==="deep"?{type:"random"}:ctx); }
+  else { main.textContent="다시 하기"; main.onclick=()=>startSession(ctx.type==="deep"?{type:"random"}:{type:ctx.type,idx:ctx.idx}); }
   if(Q.lesson){ second.textContent="오늘 화면으로"; second.onclick=()=>{exitLesson();showView("home")}; }
   else { second.textContent= wc ? `틀린 한자 복습 (${wc})` : "카드로 복습하기"; second.onclick=()=> wc ? startSession({type:"review"}) : showView("card"); }
 }
@@ -641,6 +864,7 @@ function renderSettings(){
   sel.innerHTML=`<option value="">${full?`하루 최대 ${MAX_TIMES}번까지 고를 수 있어요`:"＋ 알림 시간 추가하기"}</option>`+SLOTS.filter(t=>!selTimes.includes(t)).map(t=>`<option value="${t}">${timeLabel(t)}</option>`).join("");
   sel.disabled=full;
   $("sndSwitch").setAttribute("aria-checked",soundOn);
+  $("unlockSwitch").setAttribute("aria-checked",unlockAll);
   renderPush();
 }
 function setLevel(id){
@@ -649,10 +873,11 @@ function setLevel(id){
   $("lvBtn").textContent=LV.name+" ▾";
   syncTags(true); renderSettings(); toast(`${LV.name}로 바꿨어요`);
 }
+$("unlockSwitch").onclick=()=>{ unlockAll=!unlockAll; store.set("hj:unlock",unlockAll); renderSettings(); toast(unlockAll?"모든 단계가 열렸어요. 아무 단계나 눌러 미리 해 볼 수 있어요.":"단계 잠금을 다시 켰어요"); };
 $("sndSwitch").onclick=()=>{soundOn=!soundOn;store.set("hj:sound",soundOn);renderSettings();if(soundOn)speak("소리를 켰어요",true)};
 $("resetBtn").onclick=()=>{
   if(!confirm(`${LV.name} 도장, 틀린 한자 기록을 지울까요? (별과 연속 기록은 그대로예요)`)) return;
-  store.del("hj:prog:"+LV.id); store.del("hj:wrong:"+LV.id); toast("기록을 지웠어요");
+  store.del("hj:prog:"+LV.id); store.del("hj:prog2:"+LV.id); store.del("hj:prog3:"+LV.id); store.del("hj:wrong:"+LV.id); toast("기록을 지웠어요");
 };
 
 /* ---------- 알림 (OneSignal) ---------- */
@@ -715,6 +940,33 @@ document.addEventListener("pointerup", function once(){
   document.removeEventListener("pointerup", once);
   if(!os.Notifications.permission && "Notification" in window && Notification.permission==="default") turnPushOn();
 });
+
+/* ---------- 획순 보기 ---------- */
+const SM={c:null,k:0,t:null};
+const strokeStart=d=>{const m=d.match(/M\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/); return m?[+m[1],+m[2]]:[512,512]};
+function renderStroke(){
+  const P=STROKES(SM.c), n=P.length, k=SM.k;
+  const paths=P.map((d,i)=>`<path d="${d}" fill="${i<k||k>=n?"var(--ink)":i===k?"var(--red)":"var(--line)"}"/>`).join("");
+  const POS=(typeof HANJA_STROKE_POS!=="undefined" && HANJA_STROKE_POS[SM.c]) || P.map(strokeStart);
+  const show = k>=n ? P.map((_,i)=>i) : [k];   // 그리는 중엔 지금 획 번호만, 완성되면 전체 번호
+  const nums=show.map(i=>{const [x,y]=POS[i]; return `<circle cx="${x}" cy="${900-y}" r="42" fill="${k>=n?"var(--muted)":"var(--red)"}" opacity=".92"/><text class="sm-num" x="${x}" y="${900-y}">${i+1}</text>`}).join("");
+  $("smSvg").innerHTML=`<svg viewBox="0 0 1024 1024" aria-label="${SM.c} 획순"><g transform="translate(0,900) scale(1,-1)">${paths}</g>${nums}</svg>`;
+  $("smStep").textContent = k>=n ? `완성! 모두 ${n}획이에요` : `${k+1}번째 획 (모두 ${n}획)`;
+  $("smPrev").disabled=k<=0; $("smNext").disabled=k>=n;
+}
+function stopStroke(){ clearInterval(SM.t); SM.t=null; }
+function playStroke(){ stopStroke(); SM.k=0; renderStroke(); SM.t=setInterval(()=>{ SM.k++; renderStroke(); if(SM.k>=STROKES(SM.c).length) stopStroke(); },800); }
+function openStroke(c){
+  if(!STROKES(c)){ toast("이 한자는 획순 정보가 없어요"); return; }
+  SM.c=c; $("smTitle").textContent=`${c} 획순`; $("strokeModal").classList.remove("hide"); playStroke();
+}
+$("smClose").onclick=()=>{ stopStroke(); $("strokeModal").classList.add("hide"); };
+$("strokeModal").onclick=e=>{ if(e.target.id==="strokeModal") $("smClose").onclick(); };
+$("smPlay").onclick=playStroke;
+$("smPrev").onclick=()=>{ stopStroke(); if(SM.k>0){SM.k--;renderStroke()} };
+$("smNext").onclick=()=>{ stopStroke(); if(SM.k<STROKES(SM.c).length){SM.k++;renderStroke()} };
+$("cardStroke").onclick=()=>openStroke(itemsOf(cTheme)[cIdx][0]);
+$("learnStroke").onclick=()=>{ const it=Q.learnList&&Q.learnList[Q.learnIdx]; if(it) openStroke(it[0]); };
 
 /* ---------- 앱 설치용 서비스 워커 ---------- */
 if("serviceWorker" in navigator){
